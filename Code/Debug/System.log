@@ -1,0 +1,4 @@
+﻿  main.cpp
+D:\School-Coding\System\main.cpp(541,20): warning C4018: '<': signed/unsigned mismatch
+D:\School-Coding\System\main.cpp(552,20): warning C4018: '<': signed/unsigned mismatch
+  System.vcxproj -> D:\School-Coding\System\Debug\System.exe
