@@ -250,7 +250,7 @@ void createTable(const char* s) {
 	}
 }
 
-/* argc: holds the number of results, argv: holds each value in array, azColName: holds each column returned in array, */
+// argc: holds the number of results, argv: holds each value in array, azColName: holds each column returned in array
 int callbackStudentGradeS(void* NotUsed, int argc, char** argv, char** azColName) {
     for (int i = 0; i < argc; i++) {
         if (i == 2)
@@ -265,7 +265,7 @@ int callbackStudentGradeS(void* NotUsed, int argc, char** argv, char** azColName
     return 0;
 }
 
-/* argc: holds the number of results, argv: holds each value in array, azColName: holds each column returned in array, */
+// argc: holds the number of results, argv: holds each value in array, azColName: holds each column returned in array
 int callbackStudentGradeT(void* NotUsed, int argc, char** argv, char** azColName) {
     for(int i = 0; i < argc; i++) {
         if(i == 0)
@@ -282,6 +282,7 @@ int callbackStudentGradeT(void* NotUsed, int argc, char** argv, char** azColName
     return 0;
 }
 
+//This add a user to the database
 void addUser(const char* s, int number, string fname, string lname, string password, string userType) {
     sqlite3* DB;;
     char* messageError;
@@ -305,6 +306,7 @@ void addUser(const char* s, int number, string fname, string lname, string passw
     }
 }
 
+//Check if the userId already exist
 bool userExist(const char* s, int number) {
     sqlite3* DB;
     sqlite3_stmt* res;
@@ -331,6 +333,7 @@ bool userExist(const char* s, int number) {
     }
 }
 
+//This is for the Authentication of user login
 bool userExist(const char* s, int number, string password, string userType) {
     sqlite3* DB;
     sqlite3_stmt* res;
@@ -360,6 +363,7 @@ bool userExist(const char* s, int number, string password, string userType) {
     }
 }
 
+//Get the user information, namely the User Type
 void userInfo(const char* s, int number) {
     sqlite3* DB;
     sqlite3_stmt* res;
@@ -388,6 +392,7 @@ void userInfo(const char* s, int number) {
     }
 }
 
+//Add grades to the student
 void addGrades(const char* s, int studentNumber, int userNumber, int grade,string subject, string comment) {
     sqlite3* DB;
     sqlite3_stmt* res;
@@ -412,6 +417,7 @@ void addGrades(const char* s, int studentNumber, int userNumber, int grade,strin
     state = sqlite3_step(res);
 }
 
+//Check if the grade is accessible
 bool gradeAccessible(const char* s, int studentNumber, int userNumber) {
     sqlite3* DB;
     sqlite3_stmt* res;
@@ -439,6 +445,7 @@ bool gradeAccessible(const char* s, int studentNumber, int userNumber) {
     }
 }
 
+//Check if the grade already exist
 bool gradeCode(const char* s, int gradeCode, int studentNumber, int userNumber) {
     sqlite3* DB;
     sqlite3_stmt* res;
@@ -468,6 +475,7 @@ bool gradeCode(const char* s, int gradeCode, int studentNumber, int userNumber) 
     }
 }
 
+//Output data, this uses a callback function callbackStudentGradeT
 void gradeAccessibleOutput(const char* s) {
     sqlite3* DB;
     char* messageError;
@@ -483,6 +491,7 @@ void gradeAccessibleOutput(const char* s) {
     }
 }
 
+//Output data, this uses a callback function callbackStudentGradeS
 void gradeAccessibleOutputStudent(const char* s, int studentNumber) {
     sqlite3* DB;
     char* messageError;
@@ -501,6 +510,7 @@ void gradeAccessibleOutputStudent(const char* s, int studentNumber) {
     }
 }
 
+//Output specific data, this uses a callback function callbackStudentGradeT
 void gradeAccessibleOutputAll(const char* s, int teacherNumberTmp) {
     sqlite3* DB;
     char* messageError;
@@ -519,6 +529,7 @@ void gradeAccessibleOutputAll(const char* s, int teacherNumberTmp) {
     }
 }
 
+//Output all the data, this uses a callback function callbackStudentGradeT
 void gradeAccessibleOutputSpecs(const char* s, int studentNumber, int teacherNumberTmp) {
     sqlite3* DB;
     char* messageError;
@@ -538,6 +549,7 @@ void gradeAccessibleOutputSpecs(const char* s, int studentNumber, int teacherNum
     }
 }
 
+//Update or Edit grades of an existing and accessible grade
 void updateGrades(const char* s, int studentNumber, int grade, string subject, string comment) {
     sqlite3* DB;
     sqlite3_stmt* res;
@@ -563,6 +575,7 @@ void updateGrades(const char* s, int studentNumber, int grade, string subject, s
     state = sqlite3_step(res);
 }
 
+//Delete an existing and accessible grade
 void deleteGrades(const char* s, int gradeCode) {
     sqlite3* DB;
     sqlite3_stmt* res;
@@ -591,6 +604,7 @@ void deleteGrades(const char* s, int gradeCode) {
 
 
 /*Start of Data Verification Functions*/
+//Verify if the choice is valid
 int intValid(string temp) {
 	//Check if the Input is a valid input
 	try {
@@ -601,6 +615,7 @@ int intValid(string temp) {
 	}
 }
 
+//Verify if the input is a alpha characters
 bool checkAlpha(string str) {
     //Check if the Code Contain other characters other than alpha characters
 	for (int i = 0; i < str.size(); i++) {
@@ -611,6 +626,7 @@ bool checkAlpha(string str) {
 	return false;
 }
 
+//Check for white spaces in the input
 int checkWhiteSpace(string str) {
     //As the function name suggest, it checks for whitespaces
 	int num = 0;
@@ -623,6 +639,7 @@ int checkWhiteSpace(string str) {
 	return num;
 }
 
+//Output for an error message for invalid inputs
 void invalidInput() {
     //An output for Invalid Inputs
 	cout << "\nInvalid Input\n";
@@ -634,6 +651,7 @@ void invalidInput() {
 
 
 /*Start of Output Menu Functions*/
+//Starting System Menu
 void oSystem() {
 	//System Menu Output
 	SetConsoleTitle(TEXT("Student Report/Record Management System"));
@@ -647,6 +665,7 @@ void oSystem() {
 	choice = intValid(temp);
 }
 
+//Student Selection Menu
 void oStudentAuth() {
     SetConsoleTitle(TEXT("Student Menu"));
     system("cls");
@@ -659,6 +678,7 @@ void oStudentAuth() {
     choice = intValid(temp);
 }
 
+//Menu for the Student Login
 void oStudentAuthLog() {
     int number;
     string password;
@@ -683,6 +703,7 @@ void oStudentAuthLog() {
     }
 }
 
+//Menu for the Student Registration
 void oStudentAuthReg() {
     int number;
     string fname, lname, password, cpassword;
@@ -785,10 +806,10 @@ void oStudentAuthReg() {
     }
 }
 
+//Menu for the Login Student
 void oStudentMenu() {
     SetConsoleTitle(TEXT("Student Menu"));
     system("cls");
-    userInfo(dir, userNumber);
     cout << "Welcome Back Student, " << userFName << " " << userLName << endl;
     cout << "Student Menu\n";
     cout << "[1] View Grades\n";
@@ -798,6 +819,7 @@ void oStudentMenu() {
     choice = intValid(temp);
 }
 
+//Menu when the student view their grades
 void oStudentGrades() {
     SetConsoleTitle(TEXT("Student Grades"));
     system("cls");
@@ -808,6 +830,7 @@ void oStudentGrades() {
     system("pause");
 }
 
+//Teacher Selection Menu
 void oTeacherAuth() {
     SetConsoleTitle(TEXT("Teacher Menu"));
     system("cls");
@@ -820,6 +843,7 @@ void oTeacherAuth() {
     choice = intValid(temp);
 }
 
+//Menu for Teacher Login
 void oTeacherAuthLog() {
     int number;
     string password;
@@ -845,6 +869,7 @@ void oTeacherAuthLog() {
     }
 }
 
+//Menu for Teacher Registration
 void oTeacherAuthReg() {
     int number;
     string fname, lname, password, cpassword;
@@ -947,11 +972,11 @@ void oTeacherAuthReg() {
     }
 }
 
+//Menu for Login Teacher
 void oTeacherMenu() {
     //Teacher Menu Output
     SetConsoleTitle(TEXT("Teacher Menu"));
     system("cls");
-    userInfo(dir, userNumber);
     cout << "Welcome Back Teacher, " << userFName << " " << userLName << endl;
     cout << "Teacher Menu\n";
     cout << "[1] Graded Informations\n";
@@ -964,6 +989,7 @@ void oTeacherMenu() {
     choice = intValid(temp);
 }
 
+//Menu selection for Grade Viewing for Teacher
 void oTeacherGradeView() {
     //Teacher Grade View Selection Output
     system("cls");
@@ -977,6 +1003,7 @@ void oTeacherGradeView() {
     choice = intValid(temp);
 }
 
+//Menu for Viewing all the grade for Teacher
 void oTeacherGradeViewAll() {
     //Teacher View All Graded Student Output
     system("cls");
@@ -987,6 +1014,7 @@ void oTeacherGradeViewAll() {
     system("pause");
 }
 
+//Menu for Viewing specific grades for Teacher
 void oTeacherGradeViewSpec() {
     int studentNumber;
 
@@ -1010,6 +1038,7 @@ void oTeacherGradeViewSpec() {
     system("pause");
 }
 
+//Menu for adding grades to Student for Teacher
 void oTeacherAddGrade() {
     bool pass = false;
     int studentNumber, studentGrade;
@@ -1026,9 +1055,17 @@ void oTeacherAddGrade() {
         cout << "Student Number: ";
         getline(cin, temp);
         studentNumber = intValid(temp);
-        if (!(studentNumber > 0)) {
+        userInfo(dir, studentNumber);
+        if(!(studentNumber > 0)) {
             cout << "Invalid Student Number\n\n";
             system("pause");
+        } else if(userTypeRes == "teacher") {
+            cout << "This is a Teacher\n\n";
+            system("pause");
+        }
+        else if (userTypeRes == "student") {
+            pass = true;
+            studentNumber = intValid(temp);
         } else if(gradeAccessible(dir, studentNumber, userNumber)) {
             cout << "Student Already Graded. Do you wish to add another Grade?\nType Y for Yes and N for No\n";
             cout << "Choice>>> ";
@@ -1043,8 +1080,8 @@ void oTeacherAddGrade() {
                 system("pause");
             }
         } else {
-            pass = true;
-            studentNumber = intValid(temp);
+            cout << "Invalid Student Number\n\n";
+            system("pause");
         }
     } while (!pass);
 
@@ -1112,6 +1149,7 @@ void oTeacherAddGrade() {
 
 }
 
+//Menu for updating or editing student grades for Teacher
 void oTeacherUpdateGrade() {
     bool pass = false;
     int studentNumber, studentGrade, gradeCodeNum;
@@ -1226,6 +1264,7 @@ void oTeacherUpdateGrade() {
     updateGrades(dir, studentNumber, studentGrade, subject, comment);
 }
 
+//Menu for deleting student grades for Teacher
 void oTeacherDeleteGrade() {
     bool pass = false;
     int studentNumber, gradeCodeNum;
