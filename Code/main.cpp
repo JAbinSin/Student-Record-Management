@@ -22,6 +22,8 @@ void addUser(const char* s, int number, string fname, string lname, string passw
 int callbackStudentGradeS(void* NotUsed, int argc, char** argv, char** azColName);
 int callbackStudentGradeT(void* NotUsed, int argc, char** argv, char** azColName);
 bool gradeAccessible(const char* s, int studentNumber, int userNumber);
+void gradeAccessibleOutputSpecs(const char* s, int studentNumber, int teacherNumberTmp);
+void gradeAccessibleOutputSpecsCode(const char* s, int teacherNumberTmp, int gradeCode);
 bool gradeCode(const char* s, int gradeCode, int studentNumber, int userNumber);
 bool userExist(const char* s, int number);
 bool userExist(const char* s, int number, string password, string userType);
@@ -549,17 +551,37 @@ void gradeAccessibleOutputSpecs(const char* s, int studentNumber, int teacherNum
     }
 }
 
+//Output all the data, this uses a callback function callbackStudentGradeT
+void gradeAccessibleOutputSpecsCode(const char* s, int gradeCode, int teacherNumberTmp) {
+    sqlite3* DB;
+    char* messageError;
+
+    //Convert int to string
+    string teacherNumConverted = to_string(teacherNumberTmp);
+    string gCodeNumConverted = to_string(gradeCode);
+
+    string query = "SELECT * FROM GRADES WHERE ID = '" + gCodeNumConverted + "' AND TEACHER_NUMBER = ' " + teacherNumConverted + " ';";
+
+    int exit = sqlite3_open(s, &DB);
+    /* An open database, SQL to be evaluated, Callback function, 1st argument to callback, Error msg written here*/
+    exit = sqlite3_exec(DB, query.c_str(), callbackStudentGradeT, NULL, &messageError);
+
+    if (exit != SQLITE_OK) {
+        sqlite3_free(messageError);
+    }
+}
+
 //Update or Edit grades of an existing and accessible grade
-void updateGrades(const char* s, int studentNumber, int grade, string subject, string comment) {
+void updateGrades(const char* s, int gradeCodeNum, int grade, string subject, string comment) {
     sqlite3* DB;
     sqlite3_stmt* res;
 
     //Convert number to string
-    string sNumConverted = to_string(studentNumber);
+    string gCodeConverted = to_string(gradeCodeNum);
     string tNumConverted = to_string(userNumber);
     string gradeConverted = to_string(grade);
 
-    string update = "UPDATE GRADES SET GRADE = '" + gradeConverted + "',SUBJECT = '" + subject + "',COMMENT = '" + comment + "' WHERE STUDENT_NUMBER = '" + sNumConverted + "';";
+    string update = "UPDATE GRADES SET GRADE = '" + gradeConverted + "',SUBJECT = '" + subject + "',COMMENT = '" + comment + "' WHERE ID = '" + gCodeConverted + "';";
 
     int state = sqlite3_open(s, &DB);
     state = sqlite3_prepare_v2(DB, update.c_str(), update.length(), &res, 0);
@@ -1195,8 +1217,8 @@ void oTeacherUpdateGrade() {
         system("cls");
         cout << "Edit/Update Grades for Student\n\n";
         cout << "-----------------------Original-----------------------\n";
-        gradeAccessibleOutput(dir);
-        cout << "-------------------------------------------------------\n\n";
+        gradeAccessibleOutputSpecsCode(dir, gradeCodeNum, userNumber);
+        cout << "\n\n";
         cout << "Grade Code: " << gradeCodeNum << endl;
         cout << "Student Number: " << studentNumber << endl;
         cout << "Student Grade: ";
@@ -1218,8 +1240,8 @@ void oTeacherUpdateGrade() {
         system("cls");
         cout << "Edit/Update Grades for Student\n\n";
         cout << "-----------------------Original-----------------------\n";
-        gradeAccessibleOutput(dir);
-        cout << "-------------------------------------------------------\n\n";
+        gradeAccessibleOutputSpecsCode(dir, gradeCodeNum, userNumber);
+        cout << "\n\n";
         cout << "Grade Code: " << gradeCodeNum << endl;
         cout << "Student Number: " << studentNumber << endl;
         cout << "Student Grade: " << studentGrade << endl;
@@ -1244,8 +1266,8 @@ void oTeacherUpdateGrade() {
         system("cls");
         cout << "Edit/Update Grades for Student\n\n";
         cout << "-----------------------Original-----------------------\n";
-        gradeAccessibleOutput(dir);
-        cout << "-------------------------------------------------------\n\n";
+        gradeAccessibleOutputSpecsCode(dir, gradeCodeNum, userNumber);
+        cout << "\n\n";
         cout << "Grade Code: " << gradeCodeNum << endl;
         cout << "Student Number: " << studentNumber << endl;
         cout << "Student Grade: " << studentGrade << endl;
@@ -1261,7 +1283,7 @@ void oTeacherUpdateGrade() {
         }
     } while (!pass);
 
-    updateGrades(dir, studentNumber, studentGrade, subject, comment);
+    updateGrades(dir, gradeCodeNum, studentGrade, subject, comment);
 }
 
 //Menu for deleting student grades for Teacher
@@ -1309,11 +1331,11 @@ void oTeacherDeleteGrade() {
         system("cls");
         cout << "Delete Grades for Student\n\n";
         cout << "-------------------------------------------------------\n";
-        gradeAccessibleOutput(dir);
+        gradeAccessibleOutputSpecsCode(dir, gradeCodeNum, userNumber);
         cout << "\nEnter Y to delete\nEnter N to cancel\n\n";
         cout << "Choice>>> ";
         getline(cin, choice);
-        if (choice == "Y" or choice == "y") {
+        if (choice == "Y" || choice == "y") {
             deleteGrades(dir, gradeCodeNum);
             pass = true;
         }
